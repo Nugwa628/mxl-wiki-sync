@@ -1,0 +1,649 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MXL Wiki Sync Guide</title>
+<style>
+:root{
+  --bg:#f7f4ee; --panel:#ffffff; --panel2:#f1ece2; --line:#ded5c4; --text:#2a241c; --dim:#6f6555;
+  --gold:#9a7420; --accent:#b8892c; --good:#3d7d2e; --bad:#b4442f; --warn:#a8691a; --code:#efe9dc; --codetext:#2a241c;
+  --shadow:0 1px 2px rgba(60,40,10,.06),0 4px 14px rgba(60,40,10,.05); --on-accent:#fff;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#14110d; --panel:#1d1813; --panel2:#251f18; --line:#3a3127; --text:#ece4d4; --dim:#a39783;
+  --gold:#d6b25c; --accent:#c8a24a; --good:#86c46f; --bad:#e57a63; --warn:#e0a54a; --code:#0d0b08; --codetext:#e6dcc8;
+  --shadow:none; --on-accent:#1a140c; } }
+:root[data-theme="dark"]{
+  --bg:#14110d; --panel:#1d1813; --panel2:#251f18; --line:#3a3127; --text:#ece4d4; --dim:#a39783;
+  --gold:#d6b25c; --accent:#c8a24a; --good:#86c46f; --bad:#e57a63; --warn:#e0a54a; --code:#0d0b08; --codetext:#e6dcc8; --shadow:none; --on-accent:#1a140c; }
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.6 "Segoe UI",system-ui,-apple-system,sans-serif}
+.wrap{display:grid;grid-template-columns:230px minmax(0,1fr);gap:40px;max-width:1180px;margin:0 auto;padding:32px 24px 96px}
+nav{position:sticky;top:24px;align-self:start;font-size:14px}
+nav b{display:block;color:var(--gold);font-size:12px;letter-spacing:.08em;text-transform:uppercase;margin:18px 0 6px}
+nav a{display:block;color:var(--dim);text-decoration:none;padding:3px 0 3px 10px;border-left:2px solid transparent}
+nav a:hover{color:var(--text);border-left-color:var(--accent)}
+.theme{margin-top:22px;background:var(--panel2);border:1px solid var(--line);color:var(--dim);border-radius:6px;padding:5px 10px;font:inherit;font-size:13px;cursor:pointer}
+main{min-width:0}
+header{border-bottom:1px solid var(--line);padding-bottom:22px;margin-bottom:8px}
+.kicker{color:var(--gold);font-size:13px;letter-spacing:.1em;text-transform:uppercase;font-weight:600}
+h1{font-size:38px;line-height:1.15;margin:6px 0 10px;font-weight:650}
+.lede{font-size:18px;color:var(--dim);max-width:62ch;margin:0}
+h2{font-size:25px;margin:52px 0 10px;padding-top:8px;font-weight:650}
+h3{font-size:18px;margin:28px 0 8px}
+p,li{max-width:72ch}
+a{color:var(--gold)}
+code,kbd{font:13.5px/1.4 ui-monospace,Consolas,monospace;background:var(--code);color:var(--codetext);padding:1px 6px;border-radius:4px;border:1px solid var(--line)}
+kbd{border-bottom-width:2px}
+.flow{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:26px 0 8px}
+.flow .st{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px;box-shadow:var(--shadow);position:relative}
+.flow .st .n{display:inline-grid;place-items:center;min-width:26px;height:26px;padding:0 7px;border-radius:13px;background:var(--accent);color:var(--on-accent);font-weight:700;font-size:14px}
+.flow .st h4{margin:8px 0 4px;font-size:15px}
+.flow .st p{margin:0;font-size:13.5px;color:var(--dim)}
+.flow .st .where{display:inline-block;margin-top:8px;font-size:12px;color:var(--gold);font-weight:600}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:18px 20px;margin:16px 0;box-shadow:var(--shadow)}
+.step{display:grid;grid-template-columns:44px minmax(0,1fr);gap:14px;margin:22px 0}
+.step .big{width:40px;height:40px;border-radius:50%;background:var(--accent);color:var(--on-accent);display:grid;place-items:center;font-weight:700;font-size:18px}
+.step h3{margin:6px 0 6px}
+.step ol,.step ul{padding-left:20px;margin:6px 0}
+.note{border-left:3px solid var(--accent);background:var(--panel2);padding:10px 14px;border-radius:0 8px 8px 0;margin:14px 0;font-size:15px}
+.note.warn{border-left-color:var(--warn)} .note.bad{border-left-color:var(--bad)} .note.good{border-left-color:var(--good)}
+.note b:first-child{color:var(--gold)}
+.script{border:1px solid var(--line);border-radius:10px;overflow:hidden;margin:12px 0;background:var(--panel)}
+.script .bar{display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--panel2);border-bottom:1px solid var(--line);font-size:14px}
+.script .bar .fn{font-family:ui-monospace,Consolas,monospace;font-weight:600}
+.script .bar .sz{color:var(--dim);font-size:12.5px}
+.script button{margin-left:auto;background:var(--accent);color:var(--on-accent);border:0;border-radius:6px;padding:6px 14px;font:600 13.5px "Segoe UI",system-ui,sans-serif;cursor:pointer}
+.script button.done{background:var(--good);color:var(--on-accent)}
+.script details summary{cursor:pointer;padding:6px 12px;color:var(--dim);font-size:13px}
+.script textarea{display:block;width:100%;height:220px;border:0;border-top:1px solid var(--line);background:var(--code);color:var(--codetext);font:12px/1.45 ui-monospace,Consolas,monospace;padding:10px 12px;resize:vertical}
+table{border-collapse:collapse;width:100%;margin:12px 0;font-size:15px}
+th,td{text-align:left;vertical-align:top;padding:9px 12px;border-bottom:1px solid var(--line)}
+th{font-size:13px;letter-spacing:.04em;text-transform:uppercase;color:var(--dim);font-weight:600}
+td:first-child{white-space:nowrap}
+.pill{display:inline-block;font-size:12px;font-weight:700;padding:1px 9px;border-radius:10px;border:1px solid currentColor}
+.pill.g{color:var(--good)} .pill.r{color:var(--bad)} .pill.d{color:var(--dim)} .pill.w{color:var(--warn)}
+.mock{font:12.5px/1.5 ui-monospace,Consolas,monospace;background:var(--code);color:var(--codetext);border:1px solid var(--line);border-radius:8px;padding:12px 14px;white-space:pre;overflow-x:auto}
+.mock .a{color:var(--good)} .mock .r{color:var(--bad)} .mock .y{color:var(--gold)}
+.tree{font:13.5px/1.6 ui-monospace,Consolas,monospace;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:12px 16px;white-space:pre;overflow-x:auto}
+.tree i{color:var(--dim);font-style:normal}
+dl.faq dt{font-weight:650;margin-top:18px}
+dl.faq dd{margin:4px 0 0;color:var(--text)}
+footer{margin-top:64px;color:var(--dim);font-size:13px;border-top:1px solid var(--line);padding-top:14px}
+@media (max-width:860px){
+  .wrap{grid-template-columns:1fr;padding:20px 16px 72px;gap:0}
+  nav{position:static;border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:12px;display:none}
+  .flow{grid-template-columns:1fr 1fr}
+  h1{font-size:30px}
+  td:first-child{white-space:normal}
+  table{font-size:14px}
+  th,td{padding:8px 6px;overflow-wrap:anywhere}
+  th{letter-spacing:0}
+  td code{word-break:break-all}
+}
+@media (max-width:480px){ .flow{grid-template-columns:1fr} }
+</style>
+</head>
+<body>
+<div class="wrap">
+<nav>
+  <b>Start</b>
+  <a href="#overview">How it works</a>
+  <a href="#setup">One-time setup</a>
+  <b>Every update</b>
+  <a href="#step1">1 · Snapshot the docs</a>
+  <a href="#step2">2 · Snapshot the wiki</a>
+  <a href="#step3">3 · Compare</a>
+  <a href="#step4">4 · Review the report</a>
+  <a href="#step5">5 · Apply</a>
+  <a href="#step5admin">5 · Admins: Special:Import</a>
+  <b>Reference</b>
+  <a href="#edits">Hand edits &amp; conflicts</a>
+  <a href="#untouched">Pages it never touches</a>
+  <a href="#trouble">Troubleshooting</a>
+  <a href="#options">Options</a>
+  <a href="#faq">FAQ</a>
+  <a href="#files">What's in the folder</a>
+  <button class="theme" id="theme">Switch theme</button>
+</nav>
+<main>
+<header>
+  <div class="kicker">Median XL wiki · guide</div>
+  <h1>Keeping the wiki in step with the docs</h1>
+  <p class="lede">When docs.median-xl.com updates (say, to Σ 2.15), this tool works out exactly which wiki pages need to change, shows you every change, and applies them — while keeping edits people made on the wiki by hand.</p>
+</header>
+
+<h2 id="overview">How it works</h2>
+<p>There are five steps. Two happen in Chrome to save copies of the docs and the wiki, one runs on your computer to compare them, and the last applies the update back in Chrome. Nothing on the wiki changes until step 5, and you see every change first.</p>
+<div class="flow">
+  <div class="st"><span class="n">1</span><h4>Snapshot the docs</h4><p>Save a copy of every docs page and image.</p><span class="where">Chrome · docs site</span></div>
+  <div class="st"><span class="n">2</span><h4>Snapshot the wiki</h4><p>Save a copy of the wiki's pages (read-only).</p><span class="where">Chrome · wiki</span></div>
+  <div class="st"><span class="n">3–4</span><h4>Compare &amp; review</h4><p>Build pages from the docs and list every difference.</p><span class="where">Your PC · run_sync.bat</span></div>
+  <div class="st"><span class="n">5</span><h4>Apply</h4><p>Upload images and edit pages, with Stop anytime.</p><span class="where">Chrome · wiki</span></div>
+</div>
+<p>The comparison uses the same converter that originally built the wiki pages, so if the docs haven't changed, it reports <b>no changes at all</b>. That's a good first test.</p>
+
+<h2 id="setup">One-time setup</h2>
+<div class="step"><div class="big">a</div><div>
+  <h3>Unzip the folder somewhere permanent</h3>
+  <p>For example <code>Desktop\sugma\mxl-wiki-sync</code>. Keep using the same folder each time. Its <code>data</code> folder is how the tool remembers what it made before, which is how it spots hand edits.</p>
+</div></div>
+<div class="step"><div class="big">b</div><div>
+  <h3>Install Python</h3>
+  <p>Get Python 3.10 or newer from <a href="https://www.python.org/downloads/" target="_blank">python.org/downloads</a>. During install, <b>tick "Add python.exe to PATH"</b>. That's the only option that matters.</p>
+  <p>The first time you run <code>run_sync.bat</code> it installs the two add-ons it needs (<code>beautifulsoup4</code> and <code>lxml</code>) automatically.</p>
+</div></div>
+<div class="step"><div class="big">c</div><div>
+  <h3>Know how to open Chrome's Console</h3>
+  <p>On any page, press <kbd>F12</kbd> (or <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>J</kbd>) and click the <b>Console</b> tab. You'll paste scripts there and press <kbd>Enter</kbd>.</p>
+  <div class="note warn"><b>First paste only:</b> Chrome blocks pasting into the Console until you type <code>allow pasting</code> and press Enter. After that, pasting works normally.</div>
+</div></div>
+
+<h2 id="step1">1 · Snapshot the docs</h2>
+<ol>
+  <li>Open <a href="https://docs.median-xl.com" target="_blank">docs.median-xl.com</a> in Chrome. If a "verify you are human" check appears, complete it.</li>
+  <li>Open the Console (<kbd>F12</kbd> → Console).</li>
+  <li>Click <b>Copy script</b> below, paste it into the Console and press <kbd>Enter</kbd>.</li>
+  <li>A small box in the bottom-right corner shows progress. It takes about a minute. When it says <b>Done</b>, a file called <code>mxl-docs-snapshot-&lt;date&gt;.json</code> (around 13 MB) is in your Downloads folder.</li>
+</ol>
+<div class="script"><div class="bar"><span class="fn">grab_docs.js</span><span class="sz">3.7 KB · also in the browser folder</span><button type="button">Copy script</button></div><details><summary>Show the script</summary><textarea readonly spellcheck="false">/* Median XL wiki sync — step 1: save a snapshot of docs.median-xl.com
+ *
+ * How to use:
+ *   1. Open https://docs.median-xl.com in Chrome (pass the &quot;verify you are human&quot; check if shown).
+ *   2. Press F12, open the Console tab, paste this whole file and press Enter.
+ *      (The first time, Chrome may ask you to type &quot;allow pasting&quot; first.)
+ *   3. Wait for &quot;Done&quot; — a file named mxl-docs-snapshot-&lt;date&gt;.json is saved to your Downloads folder.
+ */
+(async () =&gt; {
+  if (!/docs\.median-xl\.com$/.test(location.hostname)) {
+    alert(&#x27;Run this on https://docs.median-xl.com (you are on &#x27; + location.hostname + &#x27;).&#x27;);
+    return;
+  }
+  const box = document.createElement(&#x27;div&#x27;);
+  box.style.cssText = &#x27;position:fixed;z-index:99999;right:16px;bottom:16px;width:360px;padding:12px 14px;background:#111;color:#eee;font:13px/1.4 monospace;border:1px solid #c8a24a;border-radius:6px;box-shadow:0 4px 18px #000&#x27;;
+  document.body.appendChild(box);
+  const say = (t) =&gt; { box.textContent = &#x27;MXL docs snapshot\n&#x27; + t; box.style.whiteSpace = &#x27;pre-wrap&#x27;; console.log(&#x27;[mxl] &#x27; + t); };
+
+  const getText = async (u) =&gt; { const r = await fetch(u, { credentials: &#x27;include&#x27; }); if (!r.ok) throw new Error(u + &#x27; -&gt; &#x27; + r.status); return r.text(); };
+  const b64 = (buf) =&gt; { const b = new Uint8Array(buf); let s = &#x27;&#x27;; for (let i = 0; i &lt; b.length; i += 0x8000) s += String.fromCharCode.apply(null, b.subarray(i, i + 0x8000)); return btoa(s); };
+  const dec = (s) =&gt; { try { return decodeURI(s); } catch (e) { return s; } };
+  async function pool(items, n, fn) { let i = 0; const out = []; await Promise.all(Array.from({ length: n }, async () =&gt; { while (i &lt; items.length) { const k = i++; out[k] = await fn(items[k], k); } })); return out; }
+
+  say(&#x27;Reading the page list…&#x27;);
+  const index = await getText(&#x27;/&#x27;);
+  const paths = [&#x27;/&#x27;, ...new Set([...index.matchAll(/href=[&quot;&#x27;](\/doc\/[a-z0-9_\/-]+)[&quot;&#x27;]/gi)].map(m =&gt; m[1]))];
+  const pages = {};
+  let done = 0;
+  await pool(paths, 4, async (p) =&gt; {
+    try { pages[p] = await getText(p); } catch (e) { console.warn(e); pages[p] = null; }
+    say(`Pages: ${++done}/${paths.length}`);
+  });
+
+  const imgs = new Set();
+  for (const html of Object.values(pages)) {
+    if (!html) continue;
+    for (const m of html.matchAll(/[&quot;&#x27;(](?:https?:\/\/docs\.median-xl\.com)?(\/images\/[^&quot;&#x27;()&lt;&gt;\n]+)[&quot;&#x27;)]/g)) imgs.add(m[1].replace(/&amp;amp;/g, &#x27;&amp;&#x27;));
+  }
+  const list = [...imgs];
+  const images = {}; const failed = [];
+  done = 0;
+  await pool(list, 6, async (src) =&gt; {
+    try {
+      const r = await fetch(encodeURI(dec(src)), { credentials: &#x27;include&#x27; });
+      if (!r.ok) throw new Error(r.status);
+      images[dec(src)] = b64(await r.arrayBuffer());
+    } catch (e) { failed.push(src); }
+    if (++done % 10 === 0 || done === list.length) say(`Pages: ${paths.length} ✓\nImages: ${done}/${list.length}`);
+  });
+
+  const h1 = (pages[&#x27;/&#x27;] || &#x27;&#x27;).match(/Σ\s*([0-9]+\.[0-9]+(?:\.[0-9]+)?)/);
+  const snap = { kind: &#x27;mxl-docs-snapshot&#x27;, source: location.origin, taken: new Date().toISOString(),
+                 version: h1 ? h1[1] : null, pages, images, failed_images: failed };
+  const blob = new Blob([JSON.stringify(snap)], { type: &#x27;application/json&#x27; });
+  const a = document.createElement(&#x27;a&#x27;);
+  a.href = URL.createObjectURL(blob);
+  a.download = `mxl-docs-snapshot-${snap.taken.slice(0, 10)}.json`;
+  document.body.appendChild(a); a.click(); a.remove();
+  say(`Done — Σ ${snap.version || &#x27;?&#x27;}\n${Object.keys(pages).length} pages, ${Object.keys(images).length} images` +
+      (failed.length ? `, ${failed.length} images failed (see console)` : &#x27;&#x27;) +
+      `\nSaved ${a.download} (${(blob.size / 1048576).toFixed(1)} MB) to Downloads.\nClick this box to close.`);
+  if (failed.length) console.warn(&#x27;[mxl] images that failed:&#x27;, failed);
+  box.onclick = () =&gt; box.remove();
+})();
+</textarea></details></div>
+<div class="note"><b>Check the version it shows.</b> The Done box shows the version read from the docs front page, e.g. <code>Σ 2.15</code>. If it shows <code>?</code>, the front page changed. You can still continue and pass the version yourself in step 3 (see <a href="#options">Options</a>).</div>
+
+<h2 id="step2">2 · Snapshot the wiki</h2>
+<ol>
+  <li>Open <a href="https://wiki.median-xl.com" target="_blank">wiki.median-xl.com</a> in Chrome.</li>
+  <li>Open the Console, copy the script below, paste and press <kbd>Enter</kbd>.</li>
+  <li>When the box says <b>Done</b>, <code>mxl-wiki-snapshot-&lt;date&gt;.json</code> (around 8 MB) is in Downloads.</li>
+</ol>
+<div class="script"><div class="bar"><span class="fn">grab_wiki.js</span><span class="sz">3.3 KB · also in the browser folder</span><button type="button">Copy script</button></div><details><summary>Show the script</summary><textarea readonly spellcheck="false">/* Median XL wiki sync — step 2: save a snapshot of wiki.median-xl.com
+ *
+ * How to use:
+ *   1. Open https://wiki.median-xl.com in Chrome.
+ *   2. Press F12, open the Console tab, paste this whole file and press Enter.
+ *   3. Wait for &quot;Done&quot; — a file named mxl-wiki-snapshot-&lt;date&gt;.json is saved to your Downloads folder.
+ * It only reads the wiki; nothing is changed.
+ */
+(async () =&gt; {
+  if (!window.mw || !/median-xl/.test(location.hostname)) { alert(&#x27;Run this on https://wiki.median-xl.com&#x27;); return; }
+  const box = document.createElement(&#x27;div&#x27;);
+  box.style.cssText = &#x27;position:fixed;z-index:99999;right:16px;bottom:16px;width:360px;padding:12px 14px;background:#111;color:#eee;font:13px/1.4 monospace;border:1px solid #c8a24a;border-radius:6px;box-shadow:0 4px 18px #000;white-space:pre-wrap&#x27;;
+  document.body.appendChild(box);
+  const say = (t) =&gt; { box.textContent = &#x27;MXL wiki snapshot\n&#x27; + t; console.log(&#x27;[mxl] &#x27; + t); };
+  const api = mw.util.wikiScript(&#x27;api&#x27;);
+  const get = async (params) =&gt; {
+    const q = new URLSearchParams({ format: &#x27;json&#x27;, formatversion: &#x27;2&#x27;, ...params });
+    for (let tries = 0; ; tries++) {
+      const r = await fetch(api + &#x27;?&#x27; + q, { credentials: &#x27;include&#x27; });
+      if (r.ok) return r.json();
+      if (tries &gt; 4) throw new Error(&#x27;API &#x27; + r.status);
+      await new Promise(res =&gt; setTimeout(res, 2000 * (tries + 1)));
+    }
+  };
+
+  const pages = {};
+  const NS = { 0: &#x27;Main&#x27;, 4: &#x27;Project&#x27;, 8: &#x27;MediaWiki&#x27;, 10: &#x27;Template&#x27;, 14: &#x27;Category&#x27;, 828: &#x27;Module&#x27; };
+  for (const ns of Object.keys(NS)) {
+    let cont = {};
+    do {
+      const j = await get({ action: &#x27;query&#x27;, generator: &#x27;allpages&#x27;, gapnamespace: ns, gaplimit: &#x27;50&#x27;,
+                            prop: &#x27;revisions&#x27;, rvprop: &#x27;content|timestamp|user|ids&#x27;, rvslots: &#x27;main&#x27;, ...cont });
+      for (const p of (j.query ? j.query.pages : [])) {
+        const rv = p.revisions &amp;&amp; p.revisions[0];
+        if (!rv) continue;
+        pages[p.title] = { text: rv.slots.main.content, ts: rv.timestamp, user: rv.user, revid: rv.revid,
+                           model: rv.slots.main.contentmodel };
+      }
+      cont = j.continue || null;
+      say(`${NS[ns]} pages… ${Object.keys(pages).length} read`);
+    } while (cont);
+  }
+
+  const files = [];
+  let cont = {};
+  do {
+    const j = await get({ action: &#x27;query&#x27;, list: &#x27;allimages&#x27;, ailimit: &#x27;500&#x27;, aiprop: &#x27;sha1|size|url|user|timestamp&#x27;, ...cont });
+    for (const f of j.query.allimages) files.push({ name: f.name, sha1: f.sha1, w: f.width, h: f.height, url: f.url, user: f.user, ts: f.timestamp });
+    cont = j.continue || null;
+    say(`${Object.keys(pages).length} pages ✓\nFiles… ${files.length}`);
+  } while (cont);
+
+  const snap = { kind: &#x27;mxl-wiki-snapshot&#x27;, source: location.origin, taken: new Date().toISOString(),
+                 user: mw.config.get(&#x27;wgUserName&#x27;), pages, files };
+  const blob = new Blob([JSON.stringify(snap)], { type: &#x27;application/json&#x27; });
+  const a = document.createElement(&#x27;a&#x27;);
+  a.href = URL.createObjectURL(blob);
+  a.download = `mxl-wiki-snapshot-${snap.taken.slice(0, 10)}.json`;
+  document.body.appendChild(a); a.click(); a.remove();
+  say(`Done — ${Object.keys(pages).length} pages, ${files.length} files.\nSaved ${a.download} (${(blob.size / 1048576).toFixed(1)} MB) to Downloads.\nClick this box to close.`);
+  box.onclick = () =&gt; box.remove();
+})();
+</textarea></details></div>
+<div class="note good"><b>Read-only.</b> This script only reads pages. It doesn't need you to be logged in, and it can't change anything.</div>
+<div class="note warn"><b>Take the wiki snapshot right before comparing.</b> If someone edits a page between the snapshot and step 5, that page is safely skipped (not overwritten), so a fresh snapshot means fewer skips.</div>
+
+<h2 id="step3">3 · Compare</h2>
+<p>Double-click <code>run_sync.bat</code> in the tool's folder. A black window opens and:</p>
+<ul>
+  <li>finds the newest docs and wiki snapshots in your Downloads folder,</li>
+  <li>builds every wiki page from the docs (about 10 seconds),</li>
+  <li>compares them with the wiki and prints a summary,</li>
+  <li>opens <code>report.html</code> in your browser.</li>
+</ul>
+<div class="mock">Docs snapshot: C:\Users\you\Downloads\mxl-docs-snapshot-2026-11-02.json
+Wiki snapshot: C:\Users\you\Downloads\mxl-wiki-snapshot-2026-11-02.json
+Game version: Σ 2.15
+1677 pages generated
+
+  new pages        <span class="a">12</span>
+  updated          <span class="a">57</span>  (+482 version-number-only)
+  merged w/ edits  <span class="a">3</span>
+  CONFLICTS        <span class="r">1</span>  (not in the update — see report)
+  unchanged        1122
+  images to upload <span class="a">9</span>
+
+<span class="y">Done. Open ...\output\sync-2.15-2026-11-02_1930\report.html</span></div>
+<p>Everything is saved in a new folder, <code>output\sync-&lt;version&gt;-&lt;date&gt;\</code>:</p>
+<div class="tree">output\sync-2.15-2026-11-02_1930\
+  report.html          <i>← what will change, page by page</i>
+  wiki-update.json     <i>← the update (used in step 5)</i>
+  apply_update.js      <i>← the apply script (also on this page)</i>
+  for-special-import\  <i>← the same update as XML, for admins (see below)</i>
+  conflicts\           <i>← only if there are conflicts</i></div>
+
+<h2 id="step4">4 · Review the report</h2>
+<p>The report opens with a row of counts. Click any count to jump to its list. Click any page name in a list to see the exact change (green lines are added, red lines removed). Page names link to the live wiki page.</p>
+<table>
+  <tr><th>Section</th><th>What it means</th><th>In the update?</th></tr>
+  <tr><td><span class="pill r">Conflicts</span></td><td>Edited by hand on the wiki <i>and</i> changed by the docs on the same lines. See <a href="#edits">resolving conflicts</a>.</td><td>No: fix by hand</td></tr>
+  <tr><td><span class="pill r">Not ours</span></td><td>A page with that title exists but wasn't made by this tool, so it's left alone.</td><td>No</td></tr>
+  <tr><td><span class="pill g">New pages</span></td><td>New items, sets, runewords or redirects from the docs.</td><td>Yes</td></tr>
+  <tr><td><span class="pill g">Updated</span></td><td>Pages the docs changed, with no hand edits since the last sync.</td><td>Yes</td></tr>
+  <tr><td><span class="pill d">Version number only</span></td><td>The only change is the game version (e.g. in the "Version history" box). Expect hundreds of these on a new major version; they're listed separately so they don't bury the real changes.</td><td>Yes</td></tr>
+  <tr><td><span class="pill g">Merged with hand edits</span></td><td>Hand-edited pages where the docs changed a different part; both are kept. The diff shows the final result.</td><td>Yes</td></tr>
+  <tr><td><span class="pill g">New images</span></td><td>Images the pages use that aren't on the wiki yet.</td><td>Yes</td></tr>
+  <tr><td><span class="pill w">Images that differ</span></td><td>An image on the wiki doesn't match the docs version.</td><td>Only with <code>--update-images</code></td></tr>
+  <tr><td><span class="pill w">No longer in the docs</span></td><td>Pages the tool made before that the docs no longer produce (removed or renamed items).</td><td>No: nothing is deleted</td></tr>
+  <tr><td><span class="pill w">Docs pages to check by hand</span></td><td>Docs pages that changed but feed pages this tool doesn't update (mainly the class pages).</td><td>No: update by hand</td></tr>
+  <tr><td><span class="pill d">Hand edits kept</span></td><td>Edited on the wiki; the docs didn't change them. Nothing to do.</td><td>n/a</td></tr>
+</table>
+<div class="note bad"><b>Stop if the report looks wrong.</b> If hundreds of pages show strange changes (missing stats, broken tables, garbled text), the docs probably changed their page layout. Don't apply that update; the converter in <code>generator\</code> needs adjusting first.</div>
+
+<h2 id="step5">5 · Apply</h2>
+<ol>
+  <li>Open <a href="https://wiki.median-xl.com" target="_blank">wiki.median-xl.com</a> and make sure you're <b>logged in</b>.</li>
+  <li>Open the Console, copy the script below (or open <code>apply_update.js</code> from the output folder), paste and press <kbd>Enter</kbd>.</li>
+  <li>A panel appears in the bottom-right corner. Click <b>Choose File</b> and pick <code>wiki-update.json</code> from the output folder.</li>
+  <li>Check the counts it shows match the report.</li>
+  <li><i>Optional:</i> tick <b>dry run</b> and click <b>Start</b> to see the list of what it would do without changing anything. Paste the script again for the real run.</li>
+  <li>Untick dry run and click <b>Start</b>.</li>
+</ol>
+<div class="script"><div class="bar"><span class="fn">apply_update.js</span><span class="sz">8.5 KB · also in the browser folder</span><button type="button">Copy script</button></div><details><summary>Show the script</summary><textarea readonly spellcheck="false">/* Median XL wiki sync — step 4: apply wiki-update.json to wiki.median-xl.com
+ *
+ * How to use:
+ *   1. Open https://wiki.median-xl.com in Chrome and log in.
+ *   2. Press F12, open the Console tab, paste this whole file and press Enter.
+ *   3. In the panel, choose the wiki-update.json made by sync.py, check the counts, click Start.
+ * Safety:
+ *   - A page that someone edited after the wiki snapshot was taken is skipped (edit conflict), not overwritten.
+ *   - &quot;create&quot; edits never overwrite an existing page; &quot;update&quot; edits never create a page.
+ *   - You can click Stop at any time; nothing is half-written.
+ * At the end a results file (wiki-update-result-&lt;date&gt;.json) is saved to Downloads.
+ */
+(() =&gt; {
+  if (!window.mw || !/median-xl/.test(location.hostname)) { alert(&#x27;Run this on https://wiki.median-xl.com&#x27;); return; }
+  const user = mw.config.get(&#x27;wgUserName&#x27;);
+  if (!user) { alert(&#x27;You are not logged in. Log in to the wiki, reload, and paste the script again.&#x27;); return; }
+  document.getElementById(&#x27;mxl-sync-panel&#x27;)?.remove();
+  const P = document.createElement(&#x27;div&#x27;);
+  P.id = &#x27;mxl-sync-panel&#x27;;
+  P.style.cssText = &#x27;position:fixed;z-index:99999;right:16px;bottom:16px;width:440px;max-height:80vh;display:flex;flex-direction:column;background:#14110d;color:#e8e0d0;font:13px/1.45 system-ui,sans-serif;border:1px solid #c8a24a;border-radius:8px;box-shadow:0 6px 24px #000;padding:12px 14px&#x27;;
+  P.innerHTML = `&lt;div style=&quot;display:flex;justify-content:space-between;align-items:center&quot;&gt;&lt;b style=&quot;color:#c8a24a;font-size:15px&quot;&gt;MXL wiki sync — apply update&lt;/b&gt;&lt;a href=&quot;#&quot; id=&quot;mx-x&quot; style=&quot;color:#9a8f7d;text-decoration:none&quot;&gt;✕&lt;/a&gt;&lt;/div&gt;
+    &lt;div style=&quot;margin:4px 0 8px;color:#9a8f7d&quot;&gt;Logged in as &lt;b style=&quot;color:#e8e0d0&quot;&gt;${mw.html.escape(user)}&lt;/b&gt;&lt;/div&gt;
+    &lt;input type=&quot;file&quot; id=&quot;mx-file&quot; accept=&quot;.json&quot; style=&quot;margin-bottom:8px;color:#e8e0d0&quot;&gt;
+    &lt;div id=&quot;mx-info&quot; style=&quot;margin-bottom:8px&quot;&gt;&lt;/div&gt;
+    &lt;div style=&quot;display:flex;gap:8px;margin-bottom:8px&quot;&gt;&lt;button id=&quot;mx-go&quot; disabled&gt;Start&lt;/button&gt;&lt;button id=&quot;mx-stop&quot; disabled&gt;Stop&lt;/button&gt;
+      &lt;label style=&quot;margin-left:auto;color:#9a8f7d&quot;&gt;&lt;input type=&quot;checkbox&quot; id=&quot;mx-dry&quot;&gt; dry run (no changes)&lt;/label&gt;&lt;/div&gt;
+    &lt;div style=&quot;background:#2a241c;border-radius:4px;height:8px;margin-bottom:8px&quot;&gt;&lt;div id=&quot;mx-bar&quot; style=&quot;background:#c8a24a;height:8px;width:0;border-radius:4px&quot;&gt;&lt;/div&gt;&lt;/div&gt;
+    &lt;div id=&quot;mx-log&quot; style=&quot;overflow:auto;flex:1;font:12px/1.4 ui-monospace,Consolas,monospace;white-space:pre-wrap;background:#000;padding:6px;border-radius:4px;min-height:120px&quot;&gt;&lt;/div&gt;`;
+  document.body.appendChild(P);
+  const $ = (id) =&gt; P.querySelector(&#x27;#&#x27; + id);
+  const logEl = $(&#x27;mx-log&#x27;);
+  const log = (t, c) =&gt; { const d = document.createElement(&#x27;div&#x27;); d.textContent = t; if (c) d.style.color = c; logEl.appendChild(d); logEl.scrollTop = 1e9; console.log(&#x27;[mxl] &#x27; + t); };
+  $(&#x27;mx-x&#x27;).onclick = (e) =&gt; { e.preventDefault(); P.remove(); };
+
+  let U = null, stop = false;
+  $(&#x27;mx-file&#x27;).onchange = async (e) =&gt; {
+    const f = e.target.files[0]; if (!f) return;
+    try { U = JSON.parse(await f.text()); } catch (err) { log(&#x27;Could not read that file: &#x27; + err, &#x27;#e0705a&#x27;); return; }
+    if (U.kind !== &#x27;mxl-wiki-update&#x27;) { log(&#x27;That is not a wiki-update.json from sync.py&#x27;, &#x27;#e0705a&#x27;); U = null; return; }
+    const c = U.edits.filter(e =&gt; e.action === &#x27;create&#x27;).length;
+    $(&#x27;mx-info&#x27;).innerHTML = `&lt;b&gt;Σ ${mw.html.escape(U.version)}&lt;/b&gt; · made ${mw.html.escape(U.generated)}&lt;br&gt;` +
+      `${c} new pages · ${U.edits.length - c} page updates · ${U.uploads.length} image uploads` +
+      (U.uploads.some(u =&gt; u.overwrite) ? ` (${U.uploads.filter(u =&gt; u.overwrite).length} replace existing images)` : &#x27;&#x27;);
+    $(&#x27;mx-go&#x27;).disabled = !(U.edits.length || U.uploads.length);
+    if ($(&#x27;mx-go&#x27;).disabled) log(&#x27;Nothing to do — the wiki is already up to date.&#x27;);
+  };
+
+  const api = mw.util.wikiScript(&#x27;api&#x27;);
+  let token = null;
+  const getToken = async () =&gt; { const j = await (await fetch(api + &#x27;?action=query&amp;meta=tokens&amp;format=json&#x27;, { credentials: &#x27;include&#x27; })).json(); token = j.query.tokens.csrftoken; };
+  const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
+  async function post(fd) {
+    for (let tries = 0; tries &lt; 6; tries++) {
+      fd.set(&#x27;token&#x27;, token);
+      let j;
+      try { j = await (await fetch(api, { method: &#x27;POST&#x27;, body: fd, credentials: &#x27;include&#x27; })).json(); }
+      catch (err) { await sleep(5000); continue; }
+      const code = j.error &amp;&amp; j.error.code;
+      if (code === &#x27;ratelimited&#x27; || code === &#x27;maxlag&#x27; || code === &#x27;readonly&#x27;) { log(`  wiki says &quot;${code}&quot;, waiting…`, &#x27;#9a8f7d&#x27;); await sleep(30000 * (tries + 1)); continue; }
+      if (code === &#x27;badtoken&#x27;) { await getToken(); continue; }
+      return j;
+    }
+    return { error: { code: &#x27;gave-up&#x27;, info: &#x27;too many retries&#x27; } };
+  }
+
+  $(&#x27;mx-stop&#x27;).onclick = () =&gt; { stop = true; log(&#x27;Stopping after the current item…&#x27;, &#x27;#e0a040&#x27;); };
+  $(&#x27;mx-go&#x27;).onclick = async () =&gt; {
+    const dry = $(&#x27;mx-dry&#x27;).checked;
+    $(&#x27;mx-go&#x27;).disabled = true; $(&#x27;mx-stop&#x27;).disabled = false; $(&#x27;mx-file&#x27;).disabled = true; stop = false;
+    await getToken();
+    const res = { version: U.version, started: new Date().toISOString(), user, dry, done: [], skipped: [], failed: [] };
+    const total = U.uploads.length + U.edits.length; let n = 0;
+    const tick = () =&gt; { $(&#x27;mx-bar&#x27;).style.width = (100 * ++n / total) + &#x27;%&#x27;; };
+    log(`${dry ? &#x27;DRY RUN: &#x27; : &#x27;&#x27;}starting — ${total} items`);
+
+    // images first, so the pages show them straight away
+    for (const up of U.uploads) {
+      if (stop) break;
+      if (dry) { log(&#x27;would upload File:&#x27; + up.name); tick(); continue; }
+      const bin = Uint8Array.from(atob(up.b64), ch =&gt; ch.charCodeAt(0));
+      const fd = new FormData();
+      fd.set(&#x27;action&#x27;, &#x27;upload&#x27;); fd.set(&#x27;format&#x27;, &#x27;json&#x27;); fd.set(&#x27;filename&#x27;, up.name);
+      fd.set(&#x27;comment&#x27;, U.summary); fd.set(&#x27;text&#x27;, &#x27;Image from docs.median-xl.com\n[[Category:Images from the game guide]]&#x27;);
+      if (up.overwrite) fd.set(&#x27;ignorewarnings&#x27;, &#x27;1&#x27;);
+      fd.set(&#x27;file&#x27;, new Blob([bin]), up.name);
+      const j = await post(fd);
+      const r = j.upload &amp;&amp; j.upload.result;
+      if (r === &#x27;Success&#x27;) { res.done.push({ file: up.name }); log(&#x27;✓ File:&#x27; + up.name, &#x27;#7fbf6a&#x27;); }
+      else if (j.upload &amp;&amp; j.upload.warnings &amp;&amp; (j.upload.warnings.exists || j.upload.warnings.duplicate)) { res.skipped.push({ file: up.name, why: &#x27;already exists&#x27; }); log(&#x27;– File:&#x27; + up.name + &#x27; already exists, skipped&#x27;, &#x27;#9a8f7d&#x27;); }
+      else { res.failed.push({ file: up.name, error: JSON.stringify(j.error || j.upload) }); log(&#x27;✗ File:&#x27; + up.name + &#x27; &#x27; + JSON.stringify(j.error || j.upload), &#x27;#e0705a&#x27;); }
+      tick(); await sleep(700);
+    }
+    for (const e of U.edits) {
+      if (stop) break;
+      if (dry) { log(`would ${e.action} ${e.title}`); tick(); continue; }
+      const fd = new FormData();
+      fd.set(&#x27;action&#x27;, &#x27;edit&#x27;); fd.set(&#x27;format&#x27;, &#x27;json&#x27;); fd.set(&#x27;title&#x27;, e.title); fd.set(&#x27;text&#x27;, e.text);
+      fd.set(&#x27;summary&#x27;, U.summary);
+      if (e.action === &#x27;create&#x27;) fd.set(&#x27;createonly&#x27;, &#x27;1&#x27;);
+      else { fd.set(&#x27;nocreate&#x27;, &#x27;1&#x27;); if (e.basets) fd.set(&#x27;basetimestamp&#x27;, e.basets); }
+      const j = await post(fd);
+      const code = j.error &amp;&amp; j.error.code;
+      if (j.edit &amp;&amp; j.edit.result === &#x27;Success&#x27;) { res.done.push({ title: e.title, action: e.action }); log(`✓ ${e.action === &#x27;create&#x27; ? &#x27;created&#x27; : &#x27;updated&#x27;} ${e.title}`, &#x27;#7fbf6a&#x27;); }
+      else if (code === &#x27;editconflict&#x27; || code === &#x27;articleexists&#x27; || code === &#x27;missingtitle&#x27;) {
+        const why = { editconflict: &#x27;changed on the wiki after the snapshot&#x27;, articleexists: &#x27;page now exists&#x27;, missingtitle: &#x27;page was deleted&#x27; }[code];
+        res.skipped.push({ title: e.title, why }); log(`– skipped ${e.title}: ${why}`, &#x27;#e0a040&#x27;);
+      } else { res.failed.push({ title: e.title, error: JSON.stringify(j.error || j) }); log(`✗ ${e.title}: ${JSON.stringify(j.error || j)}`, &#x27;#e0705a&#x27;); }
+      tick(); await sleep(700);
+    }
+    res.finished = new Date().toISOString(); res.stopped = stop;
+    log(`${stop ? &#x27;Stopped&#x27; : &#x27;Finished&#x27;}: ${res.done.length} done, ${res.skipped.length} skipped, ${res.failed.length} failed.`, &#x27;#c8a24a&#x27;);
+    if (res.skipped.length) log(&#x27;Skipped pages were changed on the wiki while you worked. Take new snapshots and run sync.py again to pick them up.&#x27;, &#x27;#9a8f7d&#x27;);
+    const a = document.createElement(&#x27;a&#x27;);
+    a.href = URL.createObjectURL(new Blob([JSON.stringify(res, null, 1)], { type: &#x27;application/json&#x27; }));
+    a.download = `wiki-update-result-${res.started.slice(0, 10)}.json`;
+    document.body.appendChild(a); a.click(); a.remove();
+    $(&#x27;mx-stop&#x27;).disabled = true;
+  };
+  log(&#x27;Choose the wiki-update.json file made by sync.py.&#x27;);
+})();
+</textarea></details></div>
+<p>It uploads new images first, then edits pages about one per second (the wiki allows about 90 edits a minute). A large update of around 500 pages takes about 8–10 minutes. Leave the tab open while it runs.</p>
+<ul>
+  <li><b>Stop</b> finishes the current page and stops. Nothing is left half-written. To continue later, take a new wiki snapshot and run steps 3–5 again; pages already done show as unchanged.</li>
+  <li>If the wiki says it's busy or rate-limited, the script waits and retries on its own.</li>
+  <li>At the end it saves <code>wiki-update-result-&lt;date&gt;.json</code> to Downloads, listing every page done, skipped or failed.</li>
+</ul>
+<div class="note good"><b>Built-in safety:</b> "new page" edits can never overwrite an existing page, and "update" edits can never create one. A page someone edited after your wiki snapshot is skipped with the message <i>changed on the wiki after the snapshot</i>. Every edit is in the page history with the summary "Sync with docs.median-xl.com (Σ x.y)", so any of them can be undone from the wiki's history page.</div>
+
+<h2 id="step5admin">5 · Apply with Special:Import <span style="font-size:15px;color:var(--dim);font-weight:500">(admins, alternative)</span></h2>
+<p>If your account has the <b>import</b> right (admins on this wiki do), you can load the whole update in a few seconds with the wiki's own import page instead of running <code>apply_update.js</code>. Steps 1–4 are the same. Every run also writes the files for this method:</p>
+<div class="tree">output\sync-2.15-2026-11-02_1930\for-special-import\
+  pages-part01.xml             <i>← the page updates, split into files of about 1.5 MB</i>
+  pages-part02.xml
+  images-for-batchupload\      <i>← new images (only if there are any)</i>
+  pages-in-this-import.txt     <i>← list of every page in the XML files</i></div>
+<p>The XML files contain the same pages as <code>wiki-update.json</code>. Conflicts are already left out.</p>
+
+<div class="step"><div class="big">a</div><div>
+  <h3>Take the wiki snapshot just before</h3>
+  <p>Do steps 2–4 right before importing. The import protects pages that are edited <i>after the wiki snapshot</i> (see the safety note below). The fresher the snapshot, the less there is to catch up on afterwards.</p>
+</div></div>
+<div class="step"><div class="big">b</div><div>
+  <h3>Upload the images first</h3>
+  <p>Skip this if there's no <code>images-for-batchupload</code> folder.</p>
+  <ol>
+    <li>Open <a href="https://wiki.median-xl.com/index.php?title=Special:BatchUpload" target="_blank">Special:BatchUpload</a> while logged in.</li>
+    <li>Select every file in <code>images-for-batchupload</code> and drag them onto the drop area. The file names already match what the pages use, so don't rename them.</li>
+    <li>Wait until each file shows a tick.</li>
+  </ol>
+</div></div>
+<div class="step"><div class="big">c</div><div>
+  <h3>Import the XML files</h3>
+  <ol>
+    <li>Open <a href="https://wiki.median-xl.com/index.php?title=Special:Import" target="_blank">Special:Import</a>. Use the section <b>Import from an XML file</b>.</li>
+    <li>Choose <code>pages-part01.xml</code>.</li>
+    <li><b>Interwiki prefix:</b> type <code>docs</code>. The form requires a prefix; it's only used to label the imported edits.</li>
+    <li>Leave <i>Assign edits to local users</i> unticked, unless you ran sync with <code>--import-user YourName</code> and want the edits under your own name.</li>
+    <li>Optionally type a reason such as <code>Sync with docs Σ 2.15</code>, then click <b>Upload file</b>.</li>
+    <li>The wiki lists each page with "1 revision" (imported) or "0 revisions" (already identical, nothing to do).</li>
+    <li>Go back and repeat for <code>pages-part02.xml</code> and the rest, in order.</li>
+  </ol>
+  <div class="note warn"><b>"File too large" or a timeout?</b> Run the compare again with smaller files, e.g. <code>run_sync.bat --import-part-mb 0.5</code>, and import those instead.</div>
+</div></div>
+<div class="step"><div class="big">d</div><div>
+  <h3>Check the result</h3>
+  <p>Take a fresh wiki snapshot (step 2) and run the compare again (step 3). It should report nothing left to do apart from any conflicts. If someone edited a page after your first snapshot, that page shows up again, and you can apply it the normal way.</p>
+</div></div>
+
+<div class="note good"><b>Why a page edited after the snapshot is safe:</b> every imported revision is dated at the time of your wiki snapshot. MediaWiki always keeps the <i>newest</i> revision as the current page. So if someone edited a page after the snapshot, their edit stays current and the imported text only goes into that page's history. This is the same protection <code>apply_update.js</code> gives.</div>
+<table>
+  <tr><th></th><th>apply_update.js</th><th>Special:Import</th></tr>
+  <tr><td>Who can use it</td><td>Any logged-in editor</td><td>Accounts with the import right (admins)</td></tr>
+  <tr><td>Speed, 500 pages</td><td>About 8–10 minutes</td><td>Under a minute, plus a few clicks per file</td></tr>
+  <tr><td>Images</td><td>Uploaded automatically</td><td>Separate drag-and-drop on Special:BatchUpload</td></tr>
+  <tr><td>Pages edited after the snapshot</td><td>Skipped and listed</td><td>Kept; the import goes into history only. Not listed, so re-run the compare to find them.</td></tr>
+  <tr><td>In page history</td><td>Your user name, dated now</td><td><code>docs&gt;MXL Docs Sync</code>, dated at the snapshot time</td></tr>
+  <tr><td>Recent Changes</td><td>One entry per edit</td><td>Import log entries</td></tr>
+  <tr><td>Results file</td><td>Yes</td><td>No; the import page lists what it did</td></tr>
+</table>
+<div class="note"><b>Undoing an import</b> works like any other edit: open the page history and restore the previous revision.</div>
+
+<h2 id="edits">Hand edits &amp; conflicts</h2>
+<p>The tool keeps a copy of every set of pages it generates. Comparing that copy with the wiki tells it whether someone edited a page by hand:</p>
+<table>
+  <tr><th>The wiki page is…</th><th>What happens</th></tr>
+  <tr><td>Missing</td><td>Created</td></tr>
+  <tr><td>Exactly what the tool made last time</td><td>Replaced with the new docs version</td></tr>
+  <tr><td>Hand-edited, and the docs changed a different part</td><td>Merged: the hand edit stays, the docs change goes in</td></tr>
+  <tr><td>Hand-edited, and the docs changed the same lines</td><td><b>Conflict</b>: left out of the update</td></tr>
+  <tr><td>Hand-edited, and the docs didn't change it</td><td>Left alone</td></tr>
+</table>
+<p>For example, Assur's Bane was added by hand to the Sacred Uniques list. If 2.15 changes Earth Rouser's level on that same page, the new level goes in and the Assur's Bane row stays.</p>
+<h3>Resolving a conflict</h3>
+<p>For each conflicting page, the <code>conflicts</code> folder holds two files:</p>
+<ul>
+  <li><code>&lt;Page&gt;.docs-version.wiki</code>: the page exactly as the docs would make it.</li>
+  <li><code>&lt;Page&gt;.merged-with-markers.wiki</code>: everything merged, with the clashing parts marked like this:</li>
+</ul>
+<div class="mock"><span class="y">&lt;&lt;&lt;&lt;&lt;&lt;&lt; wiki (hand edit)</span>
+<span class="r">+1100 Defense</span>
+<span class="y">=======</span>
+<span class="a">+1200 Defense</span>
+<span class="y">&gt;&gt;&gt;&gt;&gt;&gt;&gt; docs</span></div>
+<p>Open the page on the wiki, click <b>Edit source</b> and decide which version is right (or combine them). Open the <code>.wiki</code> files in Notepad to copy from them, and save. The next run will see the page as "hand edits kept" or "unchanged".</p>
+
+<h2 id="untouched">Pages it never touches</h2>
+<ul>
+  <li><b>The seven class pages</b> (Amazon … Sorceress). Their skill trees come from the game files, not the docs. If the docs class pages change, the report lists them under "Docs pages to check by hand".</li>
+  <li><b>Secret Items.</b> Built from the game files.</li>
+  <li><b>The Main Page.</b></li>
+  <li><b>Pages written by hand</b>, such as Assur's Bane, and anything else the tool didn't create.</li>
+  <li>Docs pages that were never converted (FAQ, OSkills, Monsters, …). Changes to them are listed so you can decide whether the wiki needs anything.</li>
+</ul>
+
+<h2 id="trouble">Troubleshooting</h2>
+<table>
+  <tr><th>Problem</th><th>Fix</th></tr>
+  <tr><td>Console won't let me paste</td><td>Type <code>allow pasting</code>, press Enter, then paste again.</td></tr>
+  <tr><td>The snapshot box says Done but there's no file in Downloads</td><td>Chrome is holding the download. Look for a "Keep" or "Allow" prompt at the top-right download icon. If a <code>.tmp</code> file appears in Downloads instead, Chrome didn't finish saving it; allow the download and run the script again.</td></tr>
+  <tr><td>"Python was not found"</td><td>Install Python and tick "Add python.exe to PATH" (see <a href="#setup">setup</a>). If it's installed already, reinstall with that box ticked, or run <code>py sync.py</code> from a terminal instead.</td></tr>
+  <tr><td>Installing the add-ons fails</td><td>Open a terminal in the folder and run <code>python -m pip install --user beautifulsoup4 lxml</code> to see the error.</td></tr>
+  <tr><td>"Could not find the snapshots"</td><td>The files must be named <code>mxl-docs-snapshot…json</code> and <code>mxl-wiki-snapshot…json</code> and be in Downloads, in the tool folder's <code>snapshots</code> subfolder, or passed with <code>--docs</code> / <code>--wiki</code>.</td></tr>
+  <tr><td>"Could not read the version"</td><td>Run <code>python sync.py --version 2.15</code> (use the real version).</td></tr>
+  <tr><td>sync.py stops with a Python error</td><td>Usually the docs changed their HTML layout. Don't apply anything; the converter needs updating.</td></tr>
+  <tr><td>Apply panel says "not logged in"</td><td>Log in to the wiki, reload the page and paste the script again.</td></tr>
+  <tr><td>Many pages "skipped: changed on the wiki after the snapshot"</td><td>Someone was editing at the same time. Take a new wiki snapshot and run steps 3–5 again; only the skipped pages will be left.</td></tr>
+  <tr><td>"✗ failed" lines in the apply log</td><td>The results file in Downloads has the wiki's error message for each one. Usually a protected page or a permission problem with your account.</td></tr>
+  <tr><td>The docs site keeps showing "verify you are human"</td><td>Complete the check in a normal tab, then run the docs script in that same tab.</td></tr>
+</table>
+
+<h2 id="options">Options</h2>
+<p>Normally you just double-click <code>run_sync.bat</code>. For special cases, open a terminal in the folder (in Explorer, click the address bar, type <code>cmd</code>, press Enter) and add options:</p>
+<table>
+  <tr><th>Command</th><th>Use it when</th></tr>
+  <tr><td><code>python sync.py --docs FILE --wiki FILE</code></td><td>You want to use specific snapshot files.</td></tr>
+  <tr><td><code>python sync.py --version 2.15</code></td><td>The version can't be read from the docs front page.</td></tr>
+  <tr><td><code>python sync.py --update-images</code></td><td>You also want to replace wiki images that differ from the docs.</td></tr>
+  <tr><td><code>python sync.py --recreate</code></td><td>Bring back pages the tool made earlier that someone deleted.</td></tr>
+  <tr><td><code>python sync.py --no-save</code></td><td>Test run that isn't remembered in <code>data\history</code>.</td></tr>
+  <tr><td><code>python sync.py --out D:\somewhere</code></td><td>Put the output folder somewhere else.</td></tr>
+  <tr><td><code>python sync.py --import-part-mb 0.5</code></td><td>Make smaller Special:Import files, if the wiki rejects them as too large.</td></tr>
+  <tr><td><code>python sync.py --import-user YourName</code></td><td>Put your own name on the Special:Import edits (tick "Assign edits to local users" when importing).</td></tr>
+</table>
+<p><code>run_sync.bat</code> passes options through too, e.g. <code>run_sync.bat --update-images</code>.</p>
+
+<h2 id="faq">FAQ</h2>
+<dl class="faq">
+  <dt>Can I run the comparison more than once?</dt>
+  <dd>Yes. It's safe to run as often as you like. Nothing changes on the wiki until you apply.</dd>
+  <dt>What if I compare but never apply?</dt>
+  <dd>Nothing happens. Next time, the tool still recognises the wiki's pages from earlier runs.</dd>
+  <dt>How do I undo an update?</dt>
+  <dd>Every edit is in the wiki's page history with the summary "Sync with docs.median-xl.com (Σ x.y)". Use "undo" or "restore" on that page's history. An admin can also mass-revert by that summary.</dd>
+  <dt>Does someone else need to install this to use it?</dt>
+  <dd>Only the person running steps 3–5. Anyone can do steps 1–2, but the files have to end up on the computer that runs <code>run_sync.bat</code>.</dd>
+  <dt>Will it ever delete pages?</dt>
+  <dd>No. Removed or renamed items only appear in the report under "No longer in the docs".</dd>
+  <dt>Can I move the folder to another computer?</dt>
+  <dd>Yes. Copy the whole folder, including <code>data</code>.</dd>
+  <dt>Why does a new version touch hundreds of pages?</dt>
+  <dd>Every item with a "Version history" box records which version the page is current for. On a new version, that number changes on every one of those pages. The report lists those under "Version number only".</dd>
+</dl>
+
+<h2 id="files">What's in the folder</h2>
+<div class="tree">mxl-wiki-sync\
+  GUIDE.html              <i>← this guide</i>
+  README.md               <i>← short version of this guide</i>
+  run_sync.bat            <i>← double-click to compare (step 3)</i>
+  sync.py                 <i>← the program</i>
+  merge3.py               <i>← merges hand edits with docs changes</i>
+  requirements.txt
+  browser\                <i>← the three Chrome scripts (also on this page)</i>
+    grab_docs.js  grab_wiki.js  apply_update.js
+  generator\              <i>← converts docs pages into wiki pages</i>
+  data\
+    pre_import_wiki.json  <i>← the wiki before the first import (keeps page names stable)</i>
+    history\              <i>← what each run generated; don't delete</i>
+  output\                 <i>← created by each run</i></div>
+
+<footer>MXL wiki sync · built for wiki.median-xl.com from the docs.median-xl.com converter (Σ 2.14 baseline) · guide generated 2026-10-05</footer>
+</main>
+</div>
+<script>
+(function(){
+  var root=document.documentElement, k='mxl-guide-theme';
+  try{var s=localStorage.getItem(k); if(s) root.setAttribute('data-theme',s);}catch(e){}
+  document.getElementById('theme').onclick=function(){
+    var cur=root.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');
+    var nx=cur==='dark'?'light':'dark'; root.setAttribute('data-theme',nx);
+    try{localStorage.setItem(k,nx);}catch(e){}
+  };
+  document.querySelectorAll('.script').forEach(function(box){
+    var btn=box.querySelector('button'), ta=box.querySelector('textarea');
+    btn.onclick=function(){
+      var txt=ta.value, ok=function(){btn.textContent='Copied ✓';btn.classList.add('done');setTimeout(function(){btn.textContent='Copy script';btn.classList.remove('done');},2500);};
+      var fallback=function(){var d=box.querySelector('details'); if(d) d.open=true; ta.focus(); ta.select(); try{document.execCommand('copy'); ok();}catch(e){btn.textContent='Press Ctrl+C';}};
+      if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(txt).then(ok,fallback);} else fallback();
+    };
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,181 @@
+/* Median XL wiki shared styles (TemplateStyles) — loaded by all MXL templates */
+
+/* ---- Diablo II text colours (matched to docs.median-xl.com) ---- */
+.mxl-basic { color: #c1b59d; }
+.mxl-white { color: #dad1d1; }
+.mxl-grey { color: #8c8c8c; }
+.mxl-magic { color: #7b7bf0; }
+.mxl-rare, .mxl-yellow { color: #d4c824; }
+.mxl-set { color: #2fae2f; }
+.mxl-unique { color: #c7943a; }
+.mxl-rune { color: #c43aac; }
+.mxl-runeword { color: #c7943a; }
+.mxl-red { color: #e03a3a; }
+.mxl-orange { color: #e88d18; }
+.mxl-tan { color: #b8a06a; }
+.mxl-darkgreen { color: #1aa01a; }
+.mxl-brightgreen { color: #45e045; }
+.mxl-holy { color: #e8d36a; }
+.mxl-unholy { color: #b04ad8; }
+.mxl-tip { border-bottom: 1px dotted currentColor; cursor: help; }
+
+/* difficulty labels */
+.mxl-diff-veryeasy { color: #4fd14f; }
+.mxl-diff-easy { color: #9ad14f; }
+.mxl-diff-moderate { color: #e0c341; }
+.mxl-diff-hard { color: #e88d18; }
+.mxl-diff-veryhard { color: #e05a2a; }
+.mxl-diff-extreme { color: #e03a3a; }
+.mxl-diff-impossible { color: #b04ad8; }
+
+/* ---- In-game style item tooltip ---- */
+.mxl-tooltip {
+	display: inline-block;
+	vertical-align: top;
+	box-sizing: border-box;
+	width: 300px;
+	max-width: 100%;
+	margin: 4px;
+	padding: 8px 10px 10px;
+	background: rgba(8, 8, 8, 0.94);
+	border: 1px solid #4a4436;
+	box-shadow: 0 0 0 1px #000, 0 2px 6px rgba(0, 0, 0, 0.6);
+	font-family: "Exocet", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+	font-size: 13px;
+	line-height: 1.45;
+	text-align: center;
+	color: #c1b59d;
+}
+.mxl-tooltip.mxl-wide { width: 360px; }
+.mxl-tt-img { margin-bottom: 4px; }
+.mxl-tt-img img { background: #000; border: 1px solid #3a352a; padding: 2px; }
+.mxl-tt-label {
+	font-size: 11px;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: #8c8c8c;
+}
+.mxl-tt-name { font-size: 15px; font-weight: bold; text-shadow: 1px 1px 1px #000; }
+.mxl-tt-base { color: #c1b59d; }
+.mxl-tt-stats { margin-top: 4px; }
+.mxl-tt-stats .mxl-basic, .mxl-tt-stats { color: #c1b59d; }
+
+.mxl-tooltip-row { display: flex; flex-wrap: wrap; align-items: flex-start; margin: 0.5em -3px; }
+.mxl-tooltip-row > .mxl-tooltip { margin: 3px; flex: 0 1 300px; }
+
+/* ---- Infobox ---- */
+.mxl-infobox {
+	float: right;
+	clear: right;
+	width: 290px;
+	max-width: 100%;
+	margin: 0 0 1em 1em;
+	background: #1a1918;
+	border: 1px solid #946c20;
+	border-radius: 3px;
+	font-size: 14px;
+	line-height: 1.4;
+}
+.mxl-infobox-title {
+	padding: 6px 8px;
+	background: #1d0404;
+	border-bottom: 1px solid #946c20;
+	text-align: center;
+	font-size: 17px;
+	font-weight: bold;
+}
+.mxl-infobox-image { padding: 10px; text-align: center; background: #0b0b0b; border-bottom: 1px solid #3a352a; }
+.mxl-infobox table { width: 100%; border-collapse: collapse; }
+.mxl-infobox th, .mxl-infobox td { padding: 4px 8px; border-top: 1px solid #2c2a26; vertical-align: top; text-align: left; }
+.mxl-infobox th { width: 42%; color: #a99d5c; font-weight: bold; }
+.mxl-infobox-section { background: #241f18; color: #b1a66c; text-align: center !important; font-weight: bold; }
+@media screen and (max-width: 720px) {
+	.mxl-infobox { float: none; width: auto; margin: 0 0 1em; }
+}
+
+/* ---- Notes / boxes ---- */
+.mxl-note {
+	margin: 0.6em 0 1em;
+	padding: 6px 12px;
+	background: #1f1c17;
+	border-left: 3px solid #946c20;
+	font-size: 13px;
+	color: #c9c1ad;
+}
+.mxl-formula {
+	display: block;
+	margin: 0.6em 0 1em;
+	padding: 10px 14px;
+	background: #111;
+	border: 1px solid #3a352a;
+	font-family: Consolas, "Courier New", monospace;
+	font-size: 14px;
+	line-height: 2.4;
+	overflow-x: auto;
+}
+.mxl-frac { display: inline-block; vertical-align: middle; text-align: center; margin: 0 4px; line-height: 1.3; }
+.mxl-frac > .mxl-num { display: block; border-bottom: 1px solid currentColor; padding: 0 4px; }
+.mxl-frac > .mxl-den { display: block; padding: 0 4px; }
+
+/* ---- Tables ---- */
+table.mxl-table { background: #212121; border-collapse: collapse; margin: 0.5em 0 1em; font-size: 14px; }
+table.mxl-table > tr > th, table.mxl-table > * > tr > th { background: #1d0404; color: #a99d5c; border: 1px solid #3a352a; padding: 4px 8px; }
+table.mxl-table > tr > td, table.mxl-table > * > tr > td { border: 1px solid #3a352a; padding: 4px 8px; vertical-align: top; }
+table.mxl-table > * > tr:hover > td { background: #2a2826; }
+table.mxl-table.mxl-compact { font-size: 13px; }
+table.mxl-table img { vertical-align: middle; }
+.mxl-scroll { overflow-x: auto; max-width: 100%; }
+
+/* ---- Navbox ---- */
+.mxl-navbox {
+	clear: both;
+	margin: 1.5em 0 0.5em;
+	border: 1px solid #946c20;
+	background: #1a1918;
+	font-size: 13px;
+}
+.mxl-navbox-title { background: #1d0404; color: #a99d5c; padding: 4px 8px; text-align: center; font-weight: bold; }
+.mxl-navbox-row { display: flex; border-top: 1px solid #2c2a26; }
+.mxl-navbox-group { flex: 0 0 160px; padding: 4px 8px; background: #241f18; color: #b1a66c; font-weight: bold; text-align: right; }
+.mxl-navbox-list { flex: 1; padding: 4px 8px; }
+.mxl-navbox-list ul { margin: 0; padding: 0; list-style: none; }
+.mxl-navbox-list li { display: inline; }
+.mxl-navbox-list li:after { content: " · "; color: #6d6450; font-weight: bold; }
+.mxl-navbox-list li:last-child:after { content: ""; }
+@media screen and (max-width: 720px) {
+	.mxl-navbox-row { display: block; }
+	.mxl-navbox-group { text-align: left; }
+}
+
+/* ---- Hub / portal cards (main page & overview pages) ---- */
+.mxl-cards { display: flex; flex-wrap: wrap; margin: 0.5em -5px 1em; }
+.mxl-card {
+	flex: 1 1 220px;
+	margin: 5px;
+	padding: 10px 12px;
+	background: #1a1918;
+	border: 1px solid #3a352a;
+	border-top: 2px solid #946c20;
+	border-radius: 3px;
+}
+.mxl-card-title { font-size: 16px; font-weight: bold; color: #a99d5c; margin-bottom: 4px; }
+.mxl-card ul { margin: 0.2em 0 0 1.1em; }
+
+/* ---- Source footer ---- */
+.mxl-source { clear: both; margin-top: 2em; font-size: 12px; color: #8c8c8c; border-top: 1px solid #3a352a; padding-top: 4px; }
+
+/* ---- Skill tree grid ---- */
+table.mxl-skilltree { table-layout: fixed; width: 100%; max-width: 540px; }
+table.mxl-skilltree > * > tr > td { width: 33%; text-align: center; vertical-align: middle; height: 74px; font-size: 13px; }
+table.mxl-skilltree > * > tr > td.mxl-empty { background: #181818; }
+table.mxl-skilltree img { border: 1px solid #3a352a; background: #000; }
+
+/* ---- Class table (main page) ---- */
+.mxl-classes { display: flex; flex-wrap: wrap; margin: 0.5em -4px 1em; }
+.mxl-class { flex: 1 1 120px; margin: 4px; padding: 8px 6px; text-align: center; background: #1a1918; border: 1px solid #3a352a; border-top: 2px solid #946c20; border-radius: 3px; }
+.mxl-class-name { font-weight: bold; font-size: 15px; margin-top: 4px; }
+.mxl-class-trees { font-size: 12px; color: #a99d5c; }
+
+table.mxl-classtable { width: 100%; table-layout: fixed; text-align: center; }
+table.mxl-classtable > * > tr > td { text-align: center; vertical-align: top; padding: 6px 4px; }
+table.mxl-classtable small { color: #a99d5c; line-height: 1.6; }
